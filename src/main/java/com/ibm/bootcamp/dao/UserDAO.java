@@ -211,5 +211,31 @@ public class UserDAO {
 		return result;
 	}
 		
+	// Get User ID by Username
+		public int getUserID(String username) {
+			Connection conn = DBAccount.getConnection();
+			PreparedStatement pstmt = null;
+			int userID = 0;
+			try {
+				conn = DBAccount.getConnection();
 
+				if (conn != null) {
+					String query = "SELECT accountID FROM accounts WHERE username = ?";
+					pstmt = conn.prepareStatement(query);
+					pstmt.setString(1, username);
+
+					ResultSet rs = pstmt.executeQuery();
+
+					while (rs.next()) {
+						userID = rs.getInt("accountID");
+					}
+						
+				}
+			} catch (SQLException ex) {
+				Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+			} finally {
+				DBAccount.closeConnection(conn, pstmt);
+			}
+			return userID;
+		}
 }
